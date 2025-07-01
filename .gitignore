@@ -1,0 +1,25 @@
+# .gitignore
+
+# CircuitPython auto-generated files
+boot_out.txt
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Logs & temporary files
+*.log
+*.tmp
+*.swp
+*.swo
+
+# IDE-specific files
+/.vscode/
+/.idea/
+*.sln
+*.sublime-project
+*.sublime-workspace
+
+# Python cache
+__pycache__
+*.pyc

@@ -20,7 +20,7 @@ Thank you for considering contributing to this project!
 
 ## 📬 Contact
 
-For any questions or issues, please open an issue on GitHub or reach out via [your contact info].
+For any questions or issues, please open an issue on GitHub or reach out via [@AnirbanDas07 ].
 
 ---
 
@@ -32,10 +32,6 @@ Describes how users should report security vulnerabilities responsibly.
 
 ## 🛡 Reporting a Vulnerability
 
-If you find a vulnerability in this project or have concerns about misuse:
-
-📧 Email: [your-email@example.com]  
-🐦 Twitter DM: [@YourHandle]
 
 Please do **not** file public issues for security-related disclosures.
 

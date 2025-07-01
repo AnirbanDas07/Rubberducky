@@ -46,7 +46,7 @@ To temporarily disable payload execution (e.g., for safe testing or configuratio
 
 ## 🔒 	Important Notes:
 Replace all placeholder URLs like https://example.com/... with your actual C2 server or payload host.
-Replace ATTACKER_IP and ATTACKER_PORT in the reverse shell payload with your listener's IP and port.
+Replace "ATTACKER_IP" and "ATTACKER_PORT" in the reverse shell payload with your listener's IP and port.
 This script assumes you're using CircuitPython and have properly installed the adafruit_hid library.
 
 ## ⚠️ Legal Disclaimer
